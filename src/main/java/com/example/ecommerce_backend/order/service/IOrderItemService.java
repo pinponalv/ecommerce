@@ -7,7 +7,7 @@ import com.example.ecommerce_backend.order.dto.UpdateOrderItemRequestDTO;
 import java.util.List;
 
 public interface IOrderItemService {
-    OrderItemResponseDTO createOrderItem(CreateOrderItemRequestDTO createOrderItemRequestDTO);
+    OrderItemResponseDTO createOrderItem(Long orderId, CreateOrderItemRequestDTO createOrderItemRequestDTO);
     OrderItemResponseDTO updateOrderItem(Long id, UpdateOrderItemRequestDTO updateOrderItemRequestDTO);
     List<OrderItemResponseDTO> getALlOrderItems();
     OrderItemResponseDTO getOrderItem(Long id);

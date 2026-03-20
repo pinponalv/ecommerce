@@ -6,9 +6,12 @@ import com.example.ecommerce_backend.product.dto.UpdateProductRequestDTO;
 import com.example.ecommerce_backend.product.entity.Product;
 import com.example.ecommerce_backend.product.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ProductService implements IProductService{
 
     @Autowired
@@ -41,21 +44,50 @@ public class ProductService implements IProductService{
         existingProduct.setDescription(updateProductRequestDTO.getDescription());
         existingProduct.setPrice(updateProductRequestDTO.getPrice());
         existingProduct.setStock(updateProductRequestDTO.getStock());
-        return null;
+
+        Product updatedProduct = productRepository.save(existingProduct);
+        return new ProductResponseDTO(
+                updatedProduct.getId(),
+                updatedProduct.getName(),
+                updatedProduct.getDescription(),
+                updatedProduct.getPrice(),
+                updatedProduct.getStock()
+        );
     }
 
     @Override
     public List<ProductResponseDTO> findAllProducts() {
-        return List.of();
+        List<Product> products = productRepository.findAll();
+        //convert dto
+        List<ProductResponseDTO> productResponseDTOS = new ArrayList<>();
+
+        for (Product product : products) {
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO(
+                    product.getId(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getStock()
+            );
+        }
+        return productResponseDTOS;
     }
 
     @Override
     public ProductResponseDTO findProductById(Long id) {
-        return null;
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+
+        return new  ProductResponseDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock()
+        );
     }
 
     @Override
     public void deleteProduct(Long id) {
-
+        productRepository.deleteById(id);
     }
 }
