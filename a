@@ -1,0 +1,3 @@
+bd_password  root
+bd_url  jdbc:mysql://localhost:3306/ecommerce
+bd_user  root
