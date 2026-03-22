@@ -1,5 +1,6 @@
 package com.example.ecommerce_backend.payment.dto;
 
+import com.example.ecommerce_backend.payment.entity.enums.PaymentMethod;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -15,9 +16,6 @@ import java.math.BigDecimal;
 @Setter
 public class CreatePaymentRequestDTO {
     @NotNull
-    private Long orderId;
-    @NotNull
-    @Positive
-    private BigDecimal amount;
+    private PaymentMethod method;
 
 }

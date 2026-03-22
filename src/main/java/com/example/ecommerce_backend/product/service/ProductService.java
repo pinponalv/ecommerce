@@ -69,6 +69,7 @@ public class ProductService implements IProductService{
                     product.getPrice(),
                     product.getStock()
             );
+            productResponseDTOS.add(productResponseDTO);
         }
         return productResponseDTOS;
     }

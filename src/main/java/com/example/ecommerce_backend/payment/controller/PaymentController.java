@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/api/payments")
 @Tag(name = "Payment", description = "Payment API Operations")
 public class PaymentController {
 
     @Autowired
     private IPaymentService paymentService;
 
-    @PostMapping
-    public ResponseEntity<PaymentResponseDTO> createPayment(@Valid @RequestBody CreatePaymentRequestDTO createPaymentRequestDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.createPayment(createPaymentRequestDTO));
+    @PostMapping("/orders/{orderId}")
+    public ResponseEntity<PaymentResponseDTO> createPayment(@PathVariable Long orderId, @Valid @RequestBody CreatePaymentRequestDTO createPaymentRequestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.createPayment(orderId, createPaymentRequestDTO));
     }
 
-    @PatchMapping("/id")
-    public ResponseEntity<PaymentResponseDTO> updatePayment(@PathVariable  Long id,@Valid @RequestBody UpdatePaymentRequestDTO updatePaymentRequestDTO){
+    @PatchMapping("/{id}")
+    public ResponseEntity<PaymentResponseDTO> updatePayment(@PathVariable Long id,@Valid @RequestBody UpdatePaymentRequestDTO updatePaymentRequestDTO){
         PaymentResponseDTO paymentResponseDTO = paymentService.updatePayment(id, updatePaymentRequestDTO);
         return ResponseEntity.ok(paymentResponseDTO);
     }
@@ -38,14 +38,14 @@ public class PaymentController {
         return ResponseEntity.ok(paymentList);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<PaymentResponseDTO> getPaymentById(@PathVariable  Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentResponseDTO> getPaymentById(@PathVariable Long id){
         PaymentResponseDTO payment = paymentService.getPaymentById(id);
         return ResponseEntity.ok(payment);
     }
 
-    @DeleteMapping("/id")
-    public ResponseEntity<PaymentResponseDTO> deletePaymentById(@PathVariable  Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PaymentResponseDTO> deletePaymentById(@PathVariable Long id){
         paymentService.deletePaymentById(id);
         return ResponseEntity.noContent().build();
     }

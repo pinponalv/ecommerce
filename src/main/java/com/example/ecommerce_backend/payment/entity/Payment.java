@@ -1,6 +1,7 @@
 package com.example.ecommerce_backend.payment.entity;
 
 import com.example.ecommerce_backend.order.entity.Order;
+import com.example.ecommerce_backend.payment.entity.enums.PaymentMethod;
 import com.example.ecommerce_backend.payment.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -28,14 +29,27 @@ public class Payment {
     private Order order;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(unique = true, nullable = false)
     private UUID transactionId;
 
     @CreationTimestamp
     private LocalDateTime paidAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod method;
+
+    @PrePersist
+    public void generateTransactionId() {
+        if(transactionId == null) {
+            transactionId = UUID.randomUUID();
+        }
+    }
 
 }

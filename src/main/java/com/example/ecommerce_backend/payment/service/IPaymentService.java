@@ -9,7 +9,7 @@ import java.util.List;
 public interface IPaymentService {
     List<PaymentResponseDTO> getAllPayments();
     PaymentResponseDTO getPaymentById(Long id);
-    PaymentResponseDTO createPayment(CreatePaymentRequestDTO createPaymentRequestDTO);
+    PaymentResponseDTO createPayment(Long orderId,CreatePaymentRequestDTO createPaymentRequestDTO);
     PaymentResponseDTO updatePayment(Long id, UpdatePaymentRequestDTO updatePaymentRequestDTO);
     void deletePaymentById(Long id);
 

@@ -1,6 +1,7 @@
 package com.example.ecommerce_backend.payment.service;
 
 import com.example.ecommerce_backend.order.entity.Order;
+import com.example.ecommerce_backend.order.entity.enums.OrderStatus;
 import com.example.ecommerce_backend.order.repository.IOrderRepository;
 import com.example.ecommerce_backend.payment.dto.CreatePaymentRequestDTO;
 import com.example.ecommerce_backend.payment.dto.PaymentResponseDTO;
@@ -34,6 +35,7 @@ public class PaymentService implements IPaymentService {
                     payment.getOrder().getId(),
                     payment.getPaymentStatus(),
                     payment.getAmount(),
+                    payment.getMethod(),
                     payment.getTransactionId(),
                     payment.getPaidAt()
             );
@@ -52,29 +54,36 @@ public class PaymentService implements IPaymentService {
                 payment.getOrder().getId(),
                 payment.getPaymentStatus(),
                 payment.getAmount(),
+                payment.getMethod(),
                 payment.getTransactionId(),
                 payment.getPaidAt()
         );
     }
 
     @Override
-    public PaymentResponseDTO createPayment(CreatePaymentRequestDTO createPaymentRequestDTO) {
-        Order order = orderRepository.findById(createPaymentRequestDTO.getOrderId())
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+    public PaymentResponseDTO createPayment(Long orderId, CreatePaymentRequestDTO createPaymentRequestDTO) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if(paymentRepository.existsByOrderId(orderId)) {
+            throw  new RuntimeException("Order already paid");
+        }
 
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setAmount(order.getTotalAmount());
-        payment.setPaymentStatus(PaymentStatus.PENDING);
-        payment.setAmount(createPaymentRequestDTO.getAmount());
+        payment.setPaymentStatus(PaymentStatus.APPROVED);
+        payment.setMethod(createPaymentRequestDTO.getMethod());
 
         Payment savedPayment = paymentRepository.save(payment);
+
+        order.setStatus(OrderStatus.PAID);
 
         return new  PaymentResponseDTO(
                 savedPayment.getId(),
                 savedPayment.getOrder().getId(),
                 savedPayment.getPaymentStatus(),
                 savedPayment.getAmount(),
+                savedPayment.getMethod(),
                 savedPayment.getTransactionId(),
                 savedPayment.getPaidAt()
         );
@@ -92,6 +101,7 @@ public class PaymentService implements IPaymentService {
                 updatedPayment.getOrder().getId(),
                 updatedPayment.getPaymentStatus(),
                 updatedPayment.getAmount(),
+                updatedPayment.getMethod(),
                 updatedPayment.getTransactionId(),
                 updatedPayment.getPaidAt()
         );

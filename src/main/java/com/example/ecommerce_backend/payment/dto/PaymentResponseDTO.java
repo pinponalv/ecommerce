@@ -1,5 +1,6 @@
 package com.example.ecommerce_backend.payment.dto;
 
+import com.example.ecommerce_backend.payment.entity.enums.PaymentMethod;
 import com.example.ecommerce_backend.payment.entity.enums.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class PaymentResponseDTO {
     private Long orderId;
     private PaymentStatus paymentStatus;
     private BigDecimal amount;
+    private PaymentMethod paymentMethod;
     private UUID transactionId;
     private LocalDateTime paidAt;
 }
